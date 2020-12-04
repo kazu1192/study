@@ -4,6 +4,8 @@ function splat(func) {
   };
 }
 
-var addArrayElements = splat(function(x, y) { return x + y });
+const addArrayElements = splat(function(x, y) { return x + y });
 
-export { addArrayElements };
+const v = addArrayElements([1 ,2]);
+
+console.log(v);
