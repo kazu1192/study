@@ -1,0 +1,10 @@
+version: "3.2"
+
+services:
+  node_dev_env:
+    build: .
+    container_name: node_dev
+    ports:
+      - 8080:3000
+    volumes:
+      - ./:/app

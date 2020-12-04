@@ -1,0 +1,9 @@
+FROM node:15.3.0-alpine
+
+WORKDIR /app
+USER node
+ENV PORT 3000
+
+EXPOSE 3000
+
+ENTRYPOINT /bin/bash
