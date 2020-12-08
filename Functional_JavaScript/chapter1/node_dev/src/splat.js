@@ -6,6 +6,4 @@ function splat(func) {
 
 const addArrayElements = splat(function(x, y) { return x + y });
 
-const v = addArrayElements([1 ,2]);
-
-console.log(v);
+console.log(addArrayElements([1 ,2]));

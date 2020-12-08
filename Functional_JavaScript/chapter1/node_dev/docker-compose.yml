@@ -1,7 +1,7 @@
 version: "3.2"
 
 services:
-  node_dev_env:
+  app:
     build: .
     container_name: node_dev
     ports:
