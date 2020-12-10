@@ -221,7 +221,7 @@ function lessOrEqual(x, y) {
 }
 ```
 
-このように、常に真偽値(trueもしくはfalse)を返す関数をプレディケーと(predicate)という。手の混んだコンパレータとは違い、lessOrEqualは <= 演算子の単純な「スキン」である。
+このように、常に真偽値(trueもしくはfalse)を返す関数をプレディケート(predicate)という。手の混んだコンパレータとは違い、lessOrEqualは <= 演算子の単純な「スキン」である。
 
 ```javascript
 [2, 3, -1, -6, 0, -108, 42, 10].sort(lessOrEqual);
@@ -259,6 +259,49 @@ comparator関数は「true」もしくは「false」の値を返すすべての�
 ### 1.2.5 抽象としてのデータ
 
 JavaScriptが提供するプリミティブやオブジェクト、配列を使って、クラスベースのデータモデリング作業の多くを代替することが可能である。関数型プログラミングは歴史的に、ハイレベルな動作の基礎となる関数を構築することと、非常にシンプルなデータ構造体を操作することの2点を中心に据えている。
+
+CSVファイルを処理するJavaScriptアプリケーションを書くように言われた場面を想像する。以下のようなCSVファイルを持っているとする。
+
+```
+name,	age,	hair
+Merble,	35,		red
+Bob,	64,		blonde
+```
+
+このデータが3つのデータ列 (name, age, hair) と3つの行 (ヘッダ行と、2つのデータ行) を持っていることは明らかである。文字列として窮屈に収納されているCSVをパースする関数を以下のように実装する。
+
+```javascript
+function lameCSV(str) {
+    return _.reduce(str.split("\n"), function(table, row) {
+        table.push(_.map(row.split(","), function(c) { return c.trim() }));
+        return table;
+    }, []);
+}
+```
+
+lameCSV関数は文字列を \n で行に分割し、それぞれの行を処理し、行のそれぞれのデータセルから余計なホワイトスペースを削除する。データテーブル全体が子配列を格納した配列となり、それぞれの子配列は文字列要素を格納している。次の表に示されている概念図のように、ネストされた配列はテーブルとして表示することができる。
+
+| name   | age  | hair   |
+| ------ | ---- | ------ |
+| Merble | 35   | red    |
+| Bob    | 64   | blonde |
+
+lameCSVを使って、文字列として保存されているデータをパースする。
+
+```javascript
+const peopleTable = lameCSV("name,age,hair\nMerble,35,red\nBob,64,blonde");
+
+peopleTable;
+//=>	[["name",	"age",	"hair"],
+//		["Merble",	"35",	"red"],
+//		["Bob",		"64",	"blonde"]]
+```
+
+関数型プログラミングでは、lameCSVや前に定義した comparator などの関数が、あるデータ型を別のデータ型に変換するための鍵となる。
+
+![関数は2つの世界の橋渡しを行う](/home/host/App/study/Functional_JavaScript/chapter1/functional_js_1.2.5.png)
+
+### 12.6
 
 ```javascript
 // 引数が null と undefined ではないことを示す関数
