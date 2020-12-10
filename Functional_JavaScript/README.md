@@ -1,6 +1,6 @@
 # Functional JavaScript
 
-- [ ] #1  関数型JavaScriptへのいざない
+- [x] #1  関数型JavaScriptへのいざない
 - [ ] #2  第一級関数と作用的プログラミング
 - [ ] #3  JavaScriptにおける変数のスコープとクロージャ
 - [ ] #4  高階関数
