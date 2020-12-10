@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { nativeNth, isIndexed, nth, second } from './nth.js';
 
 function lameCSV(str) {
   return _.reduce(str.split("\n"), function(table, row) {
@@ -7,23 +8,12 @@ function lameCSV(str) {
   }, []);
 }
 
-const peopleTable = lameCSV("name,age,hair\nMerble,35,red\nBob,64,blonde");
-
-console.log(peopleTable);
-//=>	[["name",	"age",	"hair"],
-//		["Merble",	"35",	"red"],
-//		["Bob",		"64",	"blonde"]]
-
-console.log(_.rest(peopleTable).sort());
-
 function selectNames(table) {
   return _.rest(_.map(table, _.first));
 }
 
 function selectAges(table) {
-  return _.rest(_.map(table, function(row) {
-    return nth(row, 1)
-  }));
+  return _.rest(_.map(table, second));
 }
 
 function selectHairColor(table) {
@@ -32,16 +22,5 @@ function selectHairColor(table) {
   }));
 }
 
-var mergeResults = _.zip;
+export { lameCSV, selectNames, selectAges, selectHairColor };
 
-selectNames(peopleTable);
-//=> ["Merble", "Bob"]
-
-selectAges(peopleTable);
-//=> ["35", "64"]
-
-selectHairColor(peopleTable);
-//=> ["red", "blonde"]
-
-mergeResults(selectNames(peopleTable), selectAges(peopleTable));
-//=> [["Merble", "35"], ["Bob", "64"]]

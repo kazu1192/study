@@ -393,9 +393,11 @@ mergeResults(selectNames(peopleTable), selectAges(peopleTable));
 //=> [["Merble", "35"], ["Bob", "64"]]
 ```
 
+この実装と使用法のシンプルさは、JavaScriptが提供するデータ構造をデータモデリングで使用するよう引き付ける。
 
+### 12.6 関数型テイストのJavaScript
 
-### 12.6
+JavaScriptプロジェクトを始める際、開発中によく利用する２つの有用な関数をあらかじめ定義しておく。
 
 ```javascript
 // 引数が null と undefined ではないことを示す関数
@@ -405,3 +407,25 @@ function existy(x) { return x != null };
 function truthy(x) { return (x !== false) && existy(x) };
 ```
 
+existy関数の利用によって、何かがJavaScriptにおいて存在するかどうかの判別が単純化される。truthy関数は、与えられた値が true とみなされるかどうかを判別する。
+
+```javascript
+_.isFunction(doSomething) ? doSomething() : doSomething;
+=> if truthy(cond) return action();
+```
+
+Array#mapメソッドは、配列のそれぞれの要素に対して引数に与えた関数を実行し、それぞれの実行結果を格納した新しい配列を返す。
+
+```javascript
+[null, undefined, 1, 2, false].map(existy);
+//=? [false, false, true, true, true]
+
+[null, undefined, 1, 2, false].map(truthy);
+//=? [false, false, true, true, false]
+```
+
+このコードでは、以下のようなことが行われている。
+
+- 関数を装った「存在」の抽象の定義
+- 既存の関数を使って構築された「真偽」の抽象の定義
+- これらの関数を他の関数のパラメータに渡すことによる新たな動作の実現
