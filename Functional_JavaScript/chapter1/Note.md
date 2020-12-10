@@ -156,7 +156,59 @@ JavaScriptは、データ操作を行うメソッドとデータを一緒にカ�
 
 ### 1.2.4 動作単位としての関数
 
-データと動作を隠蔽することは(より「軽い」データ変更方法を提供するという副作用をもっている)、関数を抽象の対象の単位にする方法のひとつに過ぎない。抽象の意味とは、個別の基本的な動作を保持し、あちこちで使いまわすための簡単な方法を提供することである。
+データと動作を隠蔽することは(より「軽い」データ変更方法を提供するという副作用をもっている)、関数を抽象の対象の単位にする方法のひとつに過ぎない。抽象の意味とは、個別の基本的な動作を保持し、あちこちで使いまわすための簡単な方法を提供することである。例えば、インデックスを使用して配列の要素を指定するJavaScriptの文法を考える。
+
+```javascript
+const letters = ['a', 'b', 'c'];
+
+letters[1];
+//=> 'b'
+```
+
+配列のインデックス指定はJavaScriptの基本動作だが、この動作を保持しておいて後で好きなように使いまわすためには、関数に閉じ込めておく以外に方法はない。したがって、ここでは配列のインデックス指定を行うシンプルな関数を構築する。この関数を nth と呼ぶ。
+
+```javascript
+function nativeNth(a, index) {
+    return a[index];
+}
+
+nativeNth(letters, 1);
+//=> "b"
+```
+
+nativeNth 関数は引数に期待値通りの値を与える場合は完璧に動作する。しかし、予期しない値を与えるとうまく動作しない。
+
+```javascript
+nativeNth({}, 1);
+//=> undefind
+```
+
+nth 関数を使って抽象化を行いたいと思った場合、次のように関数を説明する。「nth 関数は、インデックス指定可能なデータ型を持ったデータから、有効なインデックスで指定される要素を返す。」与えられたものがインデックス指定可能なデータ型かどうかを見分けるために、isIndexed 関数を作ることができる。
+
+```javascript
+function isIndexed(data) {
+    return _.isArray(data) || _.isString(data);
+}
+```
+
+このような抽象と別の抽象を組み合わせることによって、nth の完全な実装を行うことができる。
+
+```javascript
+function nth(a, index) {
+    if(!_.isNumber(index)) fail("インデックスは数値である必要があります");
+    if(!isIndexed(a)) fail("インデックス指定可能ではないデータ型はサポートされていません");
+    if((index < 0) || (index > a.length -1)) fail("指定されたインデックスは範囲外です");
+    return a[index];
+}
+```
+
+isIndexed 関数を使って nth 関数を抽象化したように、2番めの要素を返す動作を抽象化した second 関数を作ることができる。
+
+```javascript
+function second(a) {
+    return nth(a, 1);
+}
+```
 
 JavaScriptにおける別の基本的な動作の単位として、コンパレータ(comparator)という考え方がある。コンパレータは２つの値を引数に取り、１つ目の引数が２つ目よりも小さい場合に負の値を、大きい場合に正の値を、そして等しい場合に0を返す。JavaScriptネイティブのArray#sortメソッドもこのような機能を提供しているように見える。
 
@@ -300,6 +352,48 @@ peopleTable;
 関数型プログラミングでは、lameCSVや前に定義した comparator などの関数が、あるデータ型を別のデータ型に変換するための鍵となる。
 
 ![関数は2つの世界の橋渡しを行う](./img/functional_js_1.2.5.png)
+
+データ表現を最小限におさえておくことで、配列の要素や既に存在する配列処理の関数やメソッドをそのまま利用することができる。
+
+```javascript
+_.rest(peopleTable).sort();
+//=>	[["Bob", "64", "blonde"],
+//		["Merble", "35", "red"]]
+```
+
+また、オリジナルデータの構造はあらかじめ分かっているので、分かりやすく適切に命名されたセレクタ関数を生成して、特定のデータにアクセスすることができる。
+
+```javascript
+function selectNames(table) {
+    return _.rest(_.map(table, _.first));
+}
+
+function selectAges(table) {
+    return _.rest(_.map(table, second));
+}
+
+function selectHairColor(table) {
+    return _.rest(_.map(table, function(row) {
+        return nth(row, 2);
+    }));
+}
+
+var mergeResults = _.zip;
+
+selectNames(peopleTable);
+//=> ["Merble", "Bob"]
+
+selectAges(peopleTable);
+//=> ["35", "64"]
+
+selectHairColor(peopleTable);
+//=> ["red", "blonde"]
+
+mergeResults(selectNames(peopleTable), selectAges(peopleTable));
+//=> [["Merble", "35"], ["Bob", "64"]]
+```
+
+
 
 ### 12.6
 
