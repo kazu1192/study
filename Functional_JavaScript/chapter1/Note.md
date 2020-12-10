@@ -299,7 +299,7 @@ peopleTable;
 
 関数型プログラミングでは、lameCSVや前に定義した comparator などの関数が、あるデータ型を別のデータ型に変換するための鍵となる。
 
-![関数は2つの世界の橋渡しを行う](/home/host/App/study/Functional_JavaScript/chapter1/functional_js_1.2.5.png)
+![関数は2つの世界の橋渡しを行う](./img/functional_js_1.2.5.png)
 
 ### 12.6
 
