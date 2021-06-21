@@ -1,0 +1,12 @@
+{
+  "include": [ "src" ],
+  "compilerOptions": {
+    "lib": ["es2015"],
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "target": "es2015"
+  }
+}
